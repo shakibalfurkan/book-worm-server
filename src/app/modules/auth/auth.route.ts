@@ -2,6 +2,7 @@ import { Router } from "express";
 import validateRequest from "../../middlewares/validateRequest.js";
 import { multerUpload } from "../../config/multer.config.js";
 import { parseBody } from "../../middlewares/bodyParser.js";
+import { AuthValidation } from "./auth.validation.js";
 
 const router: Router = Router();
 
