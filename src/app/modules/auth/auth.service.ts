@@ -4,6 +4,7 @@ import AppError from "../../errors/AppError.js";
 import { setCookie } from "../../utils/cookieHandler.js";
 import { createToken } from "../../utils/jwtHelper/index.js";
 import User from "../user/user.model.js";
+import { isPasswordMatched } from "../../utils/passwordManager.js";
 
 const registerUserIntoDB = async (
   res: Response,
@@ -46,13 +47,13 @@ const registerUserIntoDB = async (
     role: result.role,
   };
 
-  const userAccessToken = createToken(
+  const accessToken = createToken(
     jwtPayload,
     config.jwt_access_token_secret as string,
     config.jwt_access_token_expires_in as string
   );
 
-  const userRefreshToken = createToken(
+  const refreshToken = createToken(
     jwtPayload,
     config.jwt_refresh_token_secret as string,
     config.jwt_refresh_token_expires_in as string
@@ -60,12 +61,63 @@ const registerUserIntoDB = async (
 
   const { password, ...user } = result.toObject();
 
-  setCookie(res, "accessToken", userAccessToken);
-  setCookie(res, "refreshToken", userRefreshToken);
+  setCookie(res, "accessToken", accessToken);
+  setCookie(res, "refreshToken", refreshToken);
 
   return user;
 };
 
+const loginUser = async (
+  res: Response,
+  payload: {
+    email: string;
+    password: string;
+  }
+) => {
+  const { email, password: plainPassword } = payload;
+
+  const user = await User.findOne({ email }).select("+password");
+
+  if (!user) {
+    throw new AppError(400, "User does not exist!");
+  }
+
+  const passwordMatch = await isPasswordMatched(
+    plainPassword,
+    user?.password as string
+  );
+
+  if (!passwordMatch) {
+    throw new AppError(400, "Invalid credentials!");
+  }
+
+  const jwtPayload = {
+    id: user._id.toString(),
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_token_secret as string,
+    config.jwt_access_token_expires_in as string
+  );
+
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_token_secret as string,
+    config.jwt_refresh_token_expires_in as string
+  );
+
+  const { password, ...userInfo } = user.toObject();
+
+  setCookie(res, "accessToken", accessToken);
+  setCookie(res, "refreshToken", refreshToken);
+
+  return userInfo;
+};
+
 export const AuthService = {
   registerUserIntoDB,
+  loginUser,
 };
