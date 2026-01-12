@@ -26,6 +26,12 @@ const createGenreIntoDB = async (payload: IGenre) => {
   return genre;
 };
 
+const getAllGenresFromDB = async () => {
+  const genres = await Genre.find().sort("name");
+  return genres;
+};
+
 export const GenreService = {
   createGenreIntoDB,
+  getAllGenresFromDB,
 };

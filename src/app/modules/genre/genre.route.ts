@@ -14,4 +14,6 @@ router.post(
   GenreController.createGenre
 );
 
+router.get("/", GenreController.getAllGenres);
+
 export const GenreRoutes = router;
