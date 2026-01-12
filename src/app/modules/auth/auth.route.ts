@@ -3,6 +3,7 @@ import validateRequest from "../../middlewares/validateRequest.js";
 import { multerUpload } from "../../config/multer.config.js";
 import { parseBody } from "../../middlewares/bodyParser.js";
 import { AuthValidation } from "./auth.validation.js";
+import { AuthController } from "./auth.controller.js";
 
 const router: Router = Router();
 

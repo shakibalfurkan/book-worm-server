@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler.js";
 import notFoundError from "./app/middlewares/notFoundError.js";
+import { globalRouter } from "./app/routes/index.js";
 
 export async function createApp(): Promise<express.Express> {
   const app = express();
@@ -26,7 +27,7 @@ export async function createApp(): Promise<express.Express> {
     });
   });
 
-  // app.use("/api/v1", globalRouter);
+  app.use("/api/v1", globalRouter);
 
   app.use(globalErrorHandler);
   app.use(notFoundError);
