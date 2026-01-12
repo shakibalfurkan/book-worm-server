@@ -1,5 +1,7 @@
 import mongoose, { model } from "mongoose";
+import bcrypt from "bcrypt";
 import type { IUser } from "./user.interface.js";
+import config from "../../config/index.js";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -118,6 +120,20 @@ const userSchema = new mongoose.Schema<IUser>(
 
 userSchema.index({ email: 1 });
 userSchema.index({ role: 1 });
+
+// hash the password before saving in database
+userSchema.pre("save", async function () {
+  this.password = await bcrypt.hash(
+    this.password,
+    Number(config.bcrypt_salt_round)
+  );
+});
+
+//remove password string after saving data
+userSchema.post("save", function (doc, next) {
+  doc.password = "";
+  next();
+});
 
 // Reading goal progress percentage
 userSchema.virtual("readingGoalProgress").get(function () {
