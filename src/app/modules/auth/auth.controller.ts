@@ -27,7 +27,47 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const refreshToken = catchAsync(async (req: Request, res: Response) => {
+  const token = req.cookies.refreshToken;
+
+  const result = await AuthService.refreshToken(token, res);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Token refreshed successfully.",
+    data: result,
+  });
+});
+
+const getUser = catchAsync(async (req: Request, res: Response) => {
+  const email = req.user?.email;
+  console.log(email);
+  const result = await AuthService.getUserFromDB(email!);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "User retrieved successfully.",
+    data: result,
+  });
+});
+
+const logout = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthService.logout(res);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Logged out successfully.",
+    data: result,
+  });
+});
+
 export const AuthController = {
   registerUser,
   loginUser,
+  refreshToken,
+  getUser,
+  logout,
 };

@@ -2,9 +2,10 @@ import config from "../../config/index.js";
 import type { Response } from "express";
 import AppError from "../../errors/AppError.js";
 import { setCookie } from "../../utils/cookieHandler.js";
-import { createToken } from "../../utils/jwtHelper/index.js";
+import { createToken, jwtHelper } from "../../utils/jwtHelper/index.js";
 import User from "../user/user.model.js";
 import { isPasswordMatched } from "../../utils/passwordManager.js";
+import type { JwtPayload } from "jsonwebtoken";
 
 const registerUserIntoDB = async (
   res: Response,
@@ -117,7 +118,66 @@ const loginUser = async (
   return userInfo;
 };
 
+const refreshToken = async (token: string, res: Response) => {
+  const decodedToken = jwtHelper.verifyToken(
+    token,
+    config.jwt_refresh_token_secret!
+  ) as JwtPayload;
+
+  console.log({ decodedToken });
+
+  if (
+    !decodedToken ||
+    !decodedToken.id ||
+    !decodedToken.email ||
+    !decodedToken.role
+  ) {
+    throw new AppError(401, "You are not authorized!");
+  }
+
+  const user = await User.findOne({ email: decodedToken.email });
+
+  if (!user) {
+    throw new AppError(401, "You are not authorized!");
+  }
+
+  const newAccessToken = jwtHelper.createToken(
+    {
+      id: user._id.toString(),
+      email: user.email,
+      role: decodedToken.role,
+    },
+    config.jwt_access_token_secret as string,
+    config.jwt_access_token_expires_in as string
+  );
+
+  setCookie(res, "accessToken", newAccessToken);
+  return null;
+};
+
+const getUserFromDB = async (email: string) => {
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new AppError(400, "User does not exist!");
+  }
+  return user;
+};
+
+const logout = async (res: Response) => {
+  const cookiesToClear = ["accessToken", "refreshToken"];
+
+  cookiesToClear.forEach((cookie) => {
+    res.clearCookie(cookie);
+  });
+
+  return null;
+};
+
 export const AuthService = {
   registerUserIntoDB,
   loginUser,
+  refreshToken,
+  getUserFromDB,
+  logout,
 };
