@@ -1,4 +1,5 @@
 import AppError from "../../errors/AppError.js";
+import { Book } from "../book/book.model.js";
 import type { IGenre } from "./genre.interface.js";
 import Genre from "./genre.model.js";
 
@@ -63,8 +64,27 @@ const updateGenre = async (payload: {
   return genre;
 };
 
+const deleteGenre = async (id: string) => {
+  const genre = await Genre.findById(id);
+
+  if (!genre) {
+    throw new AppError(404, "Genre not found");
+  }
+
+  const bookCount = await Book.countDocuments({ genre: id });
+
+  if (bookCount > 0) {
+    throw new AppError(400, "Genre has associated books. Cannot delete.");
+  }
+
+  await Genre.findByIdAndDelete(id);
+
+  return null;
+};
+
 export const GenreService = {
   createGenreIntoDB,
   getAllGenresFromDB,
   updateGenre,
+  deleteGenre,
 };
