@@ -17,6 +17,6 @@ router.post(
 router.get("/", GenreController.getAllGenres);
 
 router.put("/:id", auth(USER_ROLES.ADMIN), GenreController.updateGenre);
-router.delete("/:id", auth(USER_ROLES.ADMIN), GenreController.updateGenre);
+router.delete("/:id", auth(USER_ROLES.ADMIN), GenreController.deleteGenre);
 
 export const GenreRoutes = router;

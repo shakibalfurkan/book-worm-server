@@ -37,6 +37,10 @@ const userSchema = new mongoose.Schema<IUser>(
     },
 
     readingGoal: {
+      year: {
+        type: Number,
+        default: () => new Date().getFullYear(),
+      },
       targetBooks: {
         type: Number,
         default: 0,

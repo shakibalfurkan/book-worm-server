@@ -6,6 +6,7 @@ export interface IUser {
   role: "USER" | "ADMIN";
 
   readingGoal: {
+    year: number;
     targetBooks: number;
   };
 

@@ -21,7 +21,7 @@ const createGenreSchema = z.object({
             : "Description must be a string",
       })
       .min(2, "Description must be at least 2 characters")
-      .max(100, "Description must be less than 100 characters")
+      .max(200, "Description must be less than 200 characters")
       .trim(),
   }),
 });

@@ -2,12 +2,14 @@ import type { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync.js";
 import sendResponse from "../../utils/sendResponse.js";
 import { AuthService } from "./auth.service.js";
+import { USER_ROLES } from "../../constant/index.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const photo = req.file?.path;
   const result = await AuthService.registerUserIntoDB(res, {
     ...req.body,
     photo,
+    role: USER_ROLES.ADMIN,
   });
   sendResponse(res, {
     statusCode: 200,
