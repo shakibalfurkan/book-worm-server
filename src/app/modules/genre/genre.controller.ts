@@ -37,7 +37,7 @@ const updateGenre = catchAsync(async (req: Request, res: Response) => {
 
 const deleteGenre = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await GenreService.deleteGenre(id);
+  const result = await GenreService.deleteGenre(id as string);
   sendResponse(res, {
     statusCode: 200,
     success: true,
