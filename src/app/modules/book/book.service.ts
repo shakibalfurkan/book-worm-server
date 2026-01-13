@@ -30,7 +30,7 @@ const getAllBooksFromDB = async ({
   limitNumber,
 }: Record<string, any>) => {
   const books = await Book.find(query)
-    .populate("genre", "name")
+    .populate("genre")
     .sort(sortOptions)
     .skip(skip)
     .limit(limitNumber);
@@ -48,8 +48,41 @@ const getAllBooksFromDB = async ({
   };
 };
 
+const updateBookInDB = async (id: string, payload: Partial<IBook>) => {
+  const { title, author } = payload;
+
+  const existingBook = await Book.findById(id);
+  if (!existingBook) {
+    throw new AppError(404, "Book not found");
+  }
+
+  if (title || author) {
+    const searchTitle = title || existingBook.title;
+    const searchAuthor = author || existingBook.author;
+
+    const isDuplicate = await Book.findOne({
+      _id: { $ne: id },
+      title: { $regex: new RegExp(`^${searchTitle}$`, "i") },
+      author: { $regex: new RegExp(`^${searchAuthor}$`, "i") },
+    });
+
+    if (isDuplicate) {
+      throw new AppError(
+        400,
+        "Another book with this title and author already exists"
+      );
+    }
+  }
+
+  const result = await Book.findByIdAndUpdate(id, payload, {
+    new: true,
+  });
+
+  return result;
+};
+
 const deleteBook = async (id: string) => {
-  const result = await Book.findByIdAndDelete(id);
+  await Book.findByIdAndDelete(id);
 
   return null;
 };
@@ -57,5 +90,6 @@ const deleteBook = async (id: string) => {
 export const BookService = {
   createBookIntoDB,
   getAllBooksFromDB,
+  updateBookInDB,
   deleteBook,
 };

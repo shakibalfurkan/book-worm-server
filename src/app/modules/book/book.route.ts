@@ -19,6 +19,16 @@ router.post(
 );
 
 router.get("/", BookController.getAllBooks);
+
+router.put(
+  "/:id",
+  auth(USER_ROLES.ADMIN),
+  multerUpload.single("coverImage"),
+  parseBody,
+  validateRequest(BookValidation.updateBookValidation),
+  BookController.updateBook
+);
+
 router.delete("/:id", auth(USER_ROLES.ADMIN), BookController.deleteBook);
 
 export const BookRoutes = router;

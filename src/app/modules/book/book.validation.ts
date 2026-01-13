@@ -53,6 +53,17 @@ const createBookValidation = z.object({
   }),
 });
 
+const updateBookValidation = z.object({
+  body: z.object({
+    title: z.string().optional(),
+    author: z.string().optional(),
+    genre: z.string().optional(),
+    description: z.string().optional(),
+    totalPages: z.string().optional(),
+  }),
+});
+
 export const BookValidation = {
   createBookValidation,
+  updateBookValidation,
 };
