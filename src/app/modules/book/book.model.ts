@@ -23,7 +23,10 @@ const bookSchema = new mongoose.Schema<IBook>(
       currentlyReading: { type: Number, default: 0 },
       read: { type: Number, default: 0 },
     },
-
+    reviews: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],
+      default: [],
+    },
     avgRating: { type: Number, default: 0, min: 0, max: 5 },
     totalReviews: { type: Number, default: 0 },
   },

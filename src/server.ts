@@ -1,6 +1,6 @@
 import { createApp } from "./app.js";
 import config from "./app/config/index.js";
-// import config from "./app/config/index.js";
+
 import connectToMongoDB from "./app/database/mongodb.js";
 
 const port = process.env.PORT || config.port;

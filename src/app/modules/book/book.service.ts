@@ -1,4 +1,5 @@
 import AppError from "../../errors/AppError.js";
+import { Review } from "../review/review.model.js";
 import type { IBook } from "./book.interface.js";
 import { Book } from "./book.model.js";
 
@@ -48,6 +49,20 @@ const getAllBooksFromDB = async ({
   };
 };
 
+const getBookByIdFromDB = async (id: string) => {
+  const result = await Book.findById(id).populate("genre");
+
+  const reviews = await Review.find({ book: id }).populate("users");
+
+  if (!result) {
+    throw new AppError(404, "Book not found");
+  }
+  return {
+    book: result,
+    reviews,
+  };
+};
+
 const updateBookInDB = async (id: string, payload: Partial<IBook>) => {
   const { title, author } = payload;
 
@@ -90,6 +105,7 @@ const deleteBook = async (id: string) => {
 export const BookService = {
   createBookIntoDB,
   getAllBooksFromDB,
+  getBookByIdFromDB,
   updateBookInDB,
   deleteBook,
 };

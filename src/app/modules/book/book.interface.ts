@@ -12,6 +12,7 @@ export interface IBook {
     currentlyReading: number;
     read: number;
   };
+  reviews: Types.ObjectId[];
   avgRating: number;
   totalReviews: number;
   createdAt: Date;
