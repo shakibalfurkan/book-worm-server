@@ -1,7 +1,7 @@
 import config from "../../config/index.js";
 import type { Response } from "express";
 import AppError from "../../errors/AppError.js";
-import { setCookie } from "../../utils/cookieHandler.js";
+import { cookieOptions, setCookie } from "../../utils/cookieHandler.js";
 import { createToken, jwtHelper } from "../../utils/jwtHelper/index.js";
 import User from "../user/user.model.js";
 import { isPasswordMatched } from "../../utils/passwordManager.js";
@@ -165,11 +165,19 @@ const getUserFromDB = async (email: string) => {
 };
 
 const logout = async (res: Response) => {
-  const cookiesToClear = ["accessToken", "refreshToken"];
+  const isProd = config.node_env === "production";
 
-  cookiesToClear.forEach((cookie) => {
-    res.clearCookie(cookie);
-  });
+  const clearOptions = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? ("none" as const) : ("lax" as const),
+    path: "/",
+    expires: new Date(0),
+    maxAge: 0,
+  };
+
+  res.cookie("accessToken", "", clearOptions);
+  res.cookie("refreshToken", "", clearOptions);
 
   return null;
 };

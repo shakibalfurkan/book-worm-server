@@ -55,6 +55,10 @@ const getAllBooks = catchAsync(async (req: Request, res: Response) => {
     sortOptions.avgRating = sortOrder === "asc" ? 1 : -1;
   } else if (sortBy === "shelved") {
     sortOptions["shelfCount.wantToRead"] = sortOrder === "asc" ? 1 : -1;
+  } else if (sortBy === "title") {
+    sortOptions.title = sortOrder === "asc" ? 1 : -1;
+  } else if (sortBy === "createdAt") {
+    sortOptions.createdAt = sortOrder === "asc" ? 1 : -1;
   } else {
     sortOptions.createdAt = -1;
   }
