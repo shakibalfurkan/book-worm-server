@@ -48,7 +48,14 @@ const getAllBooksFromDB = async ({
   };
 };
 
+const deleteBook = async (id: string) => {
+  const result = await Book.findByIdAndDelete(id);
+
+  return null;
+};
+
 export const BookService = {
   createBookIntoDB,
   getAllBooksFromDB,
+  deleteBook,
 };

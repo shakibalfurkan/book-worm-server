@@ -19,5 +19,6 @@ router.post(
 );
 
 router.get("/", BookController.getAllBooks);
+router.delete("/:id", auth(USER_ROLES.ADMIN), BookController.deleteBook);
 
 export const BookRoutes = router;
