@@ -22,6 +22,33 @@ const createBookIntoDB = async (payload: Partial<IBook>) => {
   return book;
 };
 
+const getAllBooksFromDB = async ({
+  query,
+  sortOptions,
+  pageNumber,
+  skip,
+  limitNumber,
+}: Record<string, any>) => {
+  const books = await Book.find(query)
+    .populate("genre", "name")
+    .sort(sortOptions)
+    .skip(skip)
+    .limit(limitNumber);
+
+  const total = await Book.countDocuments(query);
+
+  return {
+    meta: {
+      page: pageNumber,
+      limit: limitNumber,
+      total,
+      totalPages: Math.ceil(total / limitNumber),
+    },
+    data: books,
+  };
+};
+
 export const BookService = {
   createBookIntoDB,
+  getAllBooksFromDB,
 };

@@ -17,6 +17,69 @@ const createBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getAllBooks = catchAsync(async (req: Request, res: Response) => {
+  const {
+    searchTerm,
+    genre,
+    minRating,
+    maxRating,
+    sortBy,
+    sortOrder,
+    page = 1,
+    limit = 10,
+  } = req?.query;
+
+  const query: any = {};
+
+  if (searchTerm) {
+    query.$or = [
+      { title: { $regex: searchTerm, $options: "i" } },
+      { author: { $regex: searchTerm, $options: "i" } },
+    ];
+  }
+
+  if (genre) {
+    const genreIds = (genre as string).split(",");
+    query.genre = { $in: genreIds };
+  }
+
+  if (minRating || maxRating) {
+    query.avgRating = {};
+    if (minRating) query.avgRating.$gte = Number(minRating);
+    if (maxRating) query.avgRating.$lte = Number(maxRating);
+  }
+
+  const sortOptions: any = {};
+
+  if (sortBy === "rating") {
+    sortOptions.avgRating = sortOrder === "asc" ? 1 : -1;
+  } else if (sortBy === "shelved") {
+    sortOptions["shelfCount.wantToRead"] = sortOrder === "asc" ? 1 : -1;
+  } else {
+    sortOptions.createdAt = -1;
+  }
+
+  const pageNumber = Number(page);
+  const limitNumber = Number(limit);
+  const skip = (pageNumber - 1) * limitNumber;
+
+  const result = await BookService.getAllBooksFromDB({
+    query,
+    sortOptions,
+    pageNumber,
+    skip,
+    limitNumber,
+  });
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Books retrieved successfully.",
+    data: result,
+  });
+});
+
 export const BookController = {
   createBook,
+  getAllBooks,
 };

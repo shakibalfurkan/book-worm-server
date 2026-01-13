@@ -7,6 +7,11 @@ export interface IBook {
   description: string;
   coverImage: string;
   totalPages: number;
+  shelfCount: {
+    wantToRead: number;
+    currentlyReading: number;
+    read: number;
+  };
   avgRating: number;
   totalReviews: number;
   createdAt: Date;

@@ -18,6 +18,12 @@ const bookSchema = new mongoose.Schema<IBook>(
 
     totalPages: { type: Number, required: true },
 
+    shelfCount: {
+      wantToRead: { type: Number, default: 0 },
+      currentlyReading: { type: Number, default: 0 },
+      read: { type: Number, default: 0 },
+    },
+
     avgRating: { type: Number, default: 0, min: 0, max: 5 },
     totalReviews: { type: Number, default: 0 },
   },
