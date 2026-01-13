@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import type { IUserBook } from "./userBook.interface.js";
+import type { IUserShelve } from "./userShelve.interface.js";
 
-const userBookSchema = new mongoose.Schema<IUserBook>(
+const userShelveSchema = new mongoose.Schema<IUserShelve>(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -35,4 +35,7 @@ const userBookSchema = new mongoose.Schema<IUserBook>(
   }
 );
 
-export const UserBook = mongoose.model<IUserBook>("UserBook", userBookSchema);
+export const UserShelve = mongoose.model<IUserShelve>(
+  "UserShelve",
+  userShelveSchema
+);

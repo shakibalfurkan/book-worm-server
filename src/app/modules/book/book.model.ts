@@ -17,11 +17,9 @@ const bookSchema = new mongoose.Schema<IBook>(
     coverImage: { type: String, required: true },
 
     totalPages: { type: Number, required: true },
-
-    shelfCount: {
-      wantToRead: { type: Number, default: 0 },
-      currentlyReading: { type: Number, default: 0 },
-      read: { type: Number, default: 0 },
+    userShelves: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserShelve" }],
+      default: [],
     },
     reviews: {
       type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],

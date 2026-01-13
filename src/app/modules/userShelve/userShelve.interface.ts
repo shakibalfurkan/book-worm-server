@@ -1,6 +1,6 @@
 import type { Types } from "mongoose";
 
-export interface IUserBook {
+export interface IUserShelve {
   user: Types.ObjectId;
   book: Types.ObjectId;
   shelf: string;

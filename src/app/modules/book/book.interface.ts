@@ -7,11 +7,7 @@ export interface IBook {
   description: string;
   coverImage: string;
   totalPages: number;
-  shelfCount: {
-    wantToRead: number;
-    currentlyReading: number;
-    read: number;
-  };
+  userShelves: Types.ObjectId[];
   reviews: Types.ObjectId[];
   avgRating: number;
   totalReviews: number;
