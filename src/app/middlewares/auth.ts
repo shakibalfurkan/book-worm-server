@@ -43,8 +43,6 @@ export const auth = (
       role,
     };
 
-    console.log({ token });
-
     next();
   });
 };

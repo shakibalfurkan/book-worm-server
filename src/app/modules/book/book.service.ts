@@ -52,7 +52,9 @@ const getAllBooksFromDB = async ({
 const getBookByIdFromDB = async (id: string) => {
   const result = await Book.findById(id).populate("genre");
 
-  const reviews = await Review.find({ book: id }).populate("users");
+  const reviews = await Review.find({ book: id, status: "APPROVED" }).populate(
+    "user"
+  );
 
   if (!result) {
     throw new AppError(404, "Book not found");

@@ -3,11 +3,8 @@ import { Book } from "../book/book.model.js";
 import User from "../user/user.model.js";
 import { UserShelve } from "./userShelve.model.js";
 
-const toggleShelve = async ({
-  payload,
-}: {
-  payload: { book: string; user: string };
-}) => {
+const toggleShelve = async (payload: { book: string; user: string }) => {
+  console.log(payload);
   const { book: bookId, user: userId } = payload;
 
   const book = await Book.findById(bookId);
@@ -25,7 +22,7 @@ const toggleShelve = async ({
     await Promise.all([
       UserShelve.deleteOne({ _id: existingShelve._id }),
       Book.findByIdAndUpdate(bookId, {
-        $pull: { userShelves: existingShelve._id },
+        $pull: { userShelves: user._id },
       }),
     ]);
     return { message: "Removed from shelf", status: "removed" };
@@ -33,13 +30,20 @@ const toggleShelve = async ({
     const newShelve = await UserShelve.create({ user: userId, book: bookId });
 
     await Book.findByIdAndUpdate(bookId, {
-      $push: { userShelves: newShelve._id },
+      $push: { userShelves: user._id },
     });
 
     return { data: newShelve, status: "added", message: "Added to shelf" };
   }
 };
 
+const getMyShelvesFromDB = async (userId: string) => {
+  const shelves = await UserShelve.find({ user: userId }).populate("book");
+  if (!shelves) throw new AppError(404, "Shelves not found");
+  return shelves;
+};
+
 export const UserShelveService = {
   toggleShelve,
+  getMyShelvesFromDB,
 };

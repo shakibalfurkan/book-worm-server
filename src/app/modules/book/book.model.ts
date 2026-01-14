@@ -18,7 +18,8 @@ const bookSchema = new mongoose.Schema<IBook>(
 
     totalPages: { type: Number, required: true },
     userShelves: {
-      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "UserShelve" }],
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
       default: [],
     },
     reviews: {

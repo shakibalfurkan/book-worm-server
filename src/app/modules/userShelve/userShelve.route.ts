@@ -8,10 +8,16 @@ import { UserShelveValidation } from "./userShelve.validation.js";
 const router: Router = Router();
 
 router.post(
-  "/toggle-shelf",
+  "/toggle-shelve",
   auth(USER_ROLES.USER),
   validateRequest(UserShelveValidation.toggleShelveSchema),
   UserShelveController.toggleShelve
+);
+
+router.get(
+  "/my-shelves",
+  auth(USER_ROLES.USER),
+  UserShelveController.getMyShelves
 );
 
 export const UserShelveRoutes = router;
