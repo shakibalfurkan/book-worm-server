@@ -12,6 +12,17 @@ const createReview = async (req: Request, res: Response) => {
   });
 };
 
+const getAllReviews = async (req: Request, res: Response) => {
+  const result = await ReviewService.getAllReviews();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Reviews retrieved successfully.",
+    data: result,
+  });
+};
+
 export const ReviewController = {
   createReview,
+  getAllReviews,
 };

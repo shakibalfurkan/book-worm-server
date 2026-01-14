@@ -4,6 +4,7 @@ import { GenreRoutes } from "../modules/genre/genre.route.js";
 import { BookRoutes } from "../modules/book/book.route.js";
 import { ReviewRoutes } from "../modules/review/review.route.js";
 import { UserShelveRoutes } from "../modules/userShelve/userShelve.route.js";
+import { UserRoutes } from "../modules/user/user.route.js";
 
 const router: Router = Router();
 
@@ -27,6 +28,10 @@ const moduleRoutes = [
   {
     path: "/shelves",
     route: UserShelveRoutes,
+  },
+  {
+    path: "/users",
+    route: UserRoutes,
   },
 ];
 

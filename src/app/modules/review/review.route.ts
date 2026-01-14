@@ -13,7 +13,7 @@ router.post(
   validateRequest(ReviewValidation.createReviewSchema),
   ReviewController.createReview
 );
-router.get("/", () => {});
+router.get("/", ReviewController.getAllReviews);
 router.get("/:id", () => {});
 router.put("/", auth(USER_ROLES.ADMIN), () => {});
 router.delete("/", auth(USER_ROLES.ADMIN), () => {});

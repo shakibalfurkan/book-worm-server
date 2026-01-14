@@ -40,19 +40,6 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const getUser = catchAsync(async (req: Request, res: Response) => {
-  const email = req.user?.email;
-  console.log(email);
-  const result = await AuthService.getUserFromDB(email!);
-
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "User retrieved successfully.",
-    data: result,
-  });
-});
-
 const logout = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.logout(res);
 
@@ -68,6 +55,5 @@ export const AuthController = {
   registerUser,
   loginUser,
   refreshToken,
-  getUser,
   logout,
 };

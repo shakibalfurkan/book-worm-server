@@ -31,6 +31,12 @@ export const createReviewIntoDB = async (payload: CreateReviewPayload) => {
   return result;
 };
 
+const getAllReviews = async () => {
+  const result = await Review.find({});
+  return result;
+};
+
 export const ReviewService = {
   createReviewIntoDB,
+  getAllReviews,
 };

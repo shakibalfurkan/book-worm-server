@@ -124,8 +124,6 @@ const refreshToken = async (token: string, res: Response) => {
     config.jwt_refresh_token_secret!
   ) as JwtPayload;
 
-  console.log({ decodedToken });
-
   if (
     !decodedToken ||
     !decodedToken.id ||
@@ -155,15 +153,6 @@ const refreshToken = async (token: string, res: Response) => {
   return null;
 };
 
-const getUserFromDB = async (email: string) => {
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    throw new AppError(400, "User does not exist!");
-  }
-  return user;
-};
-
 const logout = async (res: Response) => {
   const isProd = config.node_env === "production";
 
@@ -186,6 +175,5 @@ export const AuthService = {
   registerUserIntoDB,
   loginUser,
   refreshToken,
-  getUserFromDB,
   logout,
 };
