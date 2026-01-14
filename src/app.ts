@@ -13,7 +13,7 @@ export async function createApp(): Promise<express.Express> {
   app.use(
     cors({
       origin: [
-        "https://bookworm-client-rho.vercel.app",
+        "https://bookworm-client-jet.vercel.app",
         "http://localhost:3000",
       ],
       credentials: true,

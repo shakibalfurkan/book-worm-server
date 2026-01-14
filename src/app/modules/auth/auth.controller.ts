@@ -5,7 +5,7 @@ import { AuthService } from "./auth.service.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const photo = req.file?.path;
-  const result = await AuthService.registerUserIntoDB(res, {
+  const result = await AuthService.registerUserIntoDB({
     ...req.body,
     photo,
   });
@@ -18,7 +18,7 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.loginUser(res, req.body);
+  const result = await AuthService.loginUser(req.body);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -28,9 +28,9 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
-  const token = req.cookies.refreshToken;
+  const token = req.headers.authorization?.split(" ")[1];
 
-  const result = await AuthService.refreshToken(token, res);
+  const result = await AuthService.refreshToken(token!);
 
   sendResponse(res, {
     statusCode: 200,
@@ -40,20 +40,8 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-const logout = catchAsync(async (req: Request, res: Response) => {
-  const result = await AuthService.logout(res);
-
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "Logged out successfully.",
-    data: result,
-  });
-});
-
 export const AuthController = {
   registerUser,
   loginUser,
   refreshToken,
-  logout,
 };
