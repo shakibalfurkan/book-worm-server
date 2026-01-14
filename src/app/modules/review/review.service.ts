@@ -32,11 +32,24 @@ export const createReviewIntoDB = async (payload: CreateReviewPayload) => {
 };
 
 const getAllReviews = async () => {
-  const result = await Review.find({});
+  const result = await Review.find({})
+    .populate("user", "email _id")
+    .populate("book", "title _id");
+  return result;
+};
+
+const updateReview = async (id: string, status: string) => {
+  const result = await Review.findByIdAndUpdate(id, { status });
+  return result;
+};
+const deleteReview = async (id: string) => {
+  const result = await Review.findByIdAndDelete(id);
   return result;
 };
 
 export const ReviewService = {
   createReviewIntoDB,
   getAllReviews,
+  updateReview,
+  deleteReview,
 };

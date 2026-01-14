@@ -14,8 +14,8 @@ router.post(
   ReviewController.createReview
 );
 router.get("/", ReviewController.getAllReviews);
-router.get("/:id", () => {});
-router.put("/", auth(USER_ROLES.ADMIN), () => {});
-router.delete("/", auth(USER_ROLES.ADMIN), () => {});
+router.patch("/:id", auth(USER_ROLES.ADMIN), ReviewController.updateReview);
+
+router.delete("/:id", auth(USER_ROLES.ADMIN), ReviewController.deleteReview);
 
 export const ReviewRoutes = router;

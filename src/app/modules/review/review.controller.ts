@@ -21,8 +21,32 @@ const getAllReviews = async (req: Request, res: Response) => {
     data: result,
   });
 };
+const updateReview = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const status = req.body.status;
+  const result = await ReviewService.updateReview(id as string, status);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Review updated successfully.",
+    data: result,
+  });
+};
+
+const deleteReview = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await ReviewService.deleteReview(id as string);
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Review deleted successfully.",
+    data: result,
+  });
+};
 
 export const ReviewController = {
   createReview,
   getAllReviews,
+  updateReview,
+  deleteReview,
 };
