@@ -1,4 +1,5 @@
 import AppError from "../../errors/AppError.js";
+import type { IUser } from "./user.interface.js";
 import User from "./user.model.js";
 
 const getUserFromDB = async (email: string) => {
@@ -15,7 +16,13 @@ const getAllUsersFromDB = async () => {
   return users;
 };
 
+const updateUserIntoDB = async (id: string, payload: Partial<IUser>) => {
+  const result = await User.findByIdAndUpdate(id, payload);
+  return result;
+};
+
 export const UserService = {
   getUserFromDB,
   getAllUsersFromDB,
+  updateUserIntoDB,
 };
