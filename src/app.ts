@@ -12,7 +12,10 @@ export async function createApp(): Promise<express.Express> {
   // Middleware setup
   app.use(
     cors({
-      origin: ["http://localhost:3000"],
+      origin: [
+        "https://bookworm-client-rho.vercel.app",
+        "http://localhost:3000",
+      ],
       credentials: true,
     })
   );
