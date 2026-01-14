@@ -122,10 +122,23 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getRecommendedBooks = catchAsync(async (req: Request, res: Response) => {
+  const id = req?.user?.id;
+  const result = await BookService.getRecommendedBooks(id as string);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Recommended books retrieved successfully.",
+    data: result,
+  });
+});
+
 export const BookController = {
   createBook,
   getAllBooks,
   getBookById,
   updateBook,
   deleteBook,
+  getRecommendedBooks,
 };

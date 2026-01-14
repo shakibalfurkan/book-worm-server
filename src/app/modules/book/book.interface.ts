@@ -1,6 +1,7 @@
 import type { Types } from "mongoose";
 
 export interface IBook {
+  _id: Types.ObjectId | string;
   title: string;
   author: string;
   genre: Types.ObjectId;

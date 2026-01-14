@@ -20,6 +20,12 @@ router.post(
 
 router.get("/", BookController.getAllBooks);
 
+router.get(
+  "/recommended",
+  auth(USER_ROLES.USER),
+  BookController.getRecommendedBooks
+);
+
 router.get("/:id", BookController.getBookById);
 
 router.put(

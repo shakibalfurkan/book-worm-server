@@ -1,5 +1,8 @@
 import AppError from "../../errors/AppError.js";
+import getMostFrequent from "../../utils/getMostFrequent.js";
+import Genre from "../genre/genre.model.js";
 import { Review } from "../review/review.model.js";
+import { UserShelve } from "../userShelve/userShelve.model.js";
 import type { IBook } from "./book.interface.js";
 import { Book } from "./book.model.js";
 
@@ -104,10 +107,64 @@ const deleteBook = async (id: string) => {
   return null;
 };
 
+const getRecommendedBooks = async (userId: string) => {
+  const readBooks = await UserShelve.find({
+    user: userId,
+    status: "READ",
+  }).populate("book");
+
+  let recommendedBooks: IBook[] = [];
+  let reason = "Recommended for you based on community popularity";
+
+  const readBookIds = readBooks.map((b) => (b.book as any)._id);
+
+  if (readBooks.length >= 3) {
+    const genreIds = readBooks
+      .map((item) => {
+        const book = item.book as any;
+        return book.genre?.toString();
+      })
+      .filter(Boolean);
+
+    const topGenreId = getMostFrequent(genreIds);
+
+    if (topGenreId) {
+      recommendedBooks = await Book.find({
+        genre: topGenreId,
+        _id: { $nin: readBookIds },
+      })
+        .populate("genre")
+        .sort({ avgRating: -1 })
+        .limit(12);
+
+      const genreDoc = await Genre.findById(topGenreId);
+      if (genreDoc) {
+        reason = `Matches your preference for ${genreDoc.name} and high-rated reviews`;
+      }
+    }
+  }
+
+  if (recommendedBooks.length < 12) {
+    const currentRecIds = recommendedBooks.map((b) => (b as any)._id);
+
+    const extraBooks = await Book.find({
+      _id: { $nin: [...readBookIds, ...currentRecIds] },
+    })
+      .populate("genre")
+      .sort({ avgRating: -1 })
+      .limit(18 - recommendedBooks.length);
+
+    recommendedBooks = [...recommendedBooks, ...extraBooks];
+  }
+
+  return { books: recommendedBooks, reason };
+};
+
 export const BookService = {
   createBookIntoDB,
   getAllBooksFromDB,
   getBookByIdFromDB,
   updateBookInDB,
   deleteBook,
+  getRecommendedBooks,
 };

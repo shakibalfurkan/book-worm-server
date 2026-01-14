@@ -14,7 +14,7 @@ const userShelveSchema = new mongoose.Schema<IUserShelve>(
       required: true,
     },
 
-    shelf: {
+    shelve: {
       type: String,
       enum: ["WANT_TO_READ", "CURRENTLY_READING", "READ"],
       default: "WANT_TO_READ",
