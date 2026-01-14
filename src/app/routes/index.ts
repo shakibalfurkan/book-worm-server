@@ -5,6 +5,7 @@ import { BookRoutes } from "../modules/book/book.route.js";
 import { ReviewRoutes } from "../modules/review/review.route.js";
 import { UserShelveRoutes } from "../modules/userShelve/userShelve.route.js";
 import { UserRoutes } from "../modules/user/user.route.js";
+import { TutorialRoutes } from "../modules/tutorial/tutorial.route.js";
 
 const router: Router = Router();
 
@@ -32,6 +33,10 @@ const moduleRoutes = [
   {
     path: "/users",
     route: UserRoutes,
+  },
+  {
+    path: "/tutorials",
+    route: TutorialRoutes,
   },
 ];
 
